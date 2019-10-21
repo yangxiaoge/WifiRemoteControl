@@ -1,11 +1,13 @@
 package com.yjn.wifiremotecontrol;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.ServiceUtils;
 import com.yjn.wifiremotecontrol.service.ControlService;
 import com.yjn.wifiremotecontrol.socket.SocketIoManager;
@@ -30,24 +32,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        msg.setText("本机ip " + getIP() + "\t\t端口 " + SocketIoManager.PORT);
-    }
-
-    private String getIP() {
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress() && (inetAddress instanceof Inet4Address)) {
-                        return inetAddress.getHostAddress().toString();
-                    }
-                }
-            }
-        } catch (SocketException ex) {
-            ex.printStackTrace();
-        }
-        return null;
+        msg.setText("本机ip " + NetworkUtils.getIPAddress(true) + "\t\t端口 " + SocketIoManager.PORT);
     }
 
     public void start(View view) {
@@ -63,6 +48,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void stop(View view) {
-        ServiceUtils.stopService(ControlService.class);
+       ServiceUtils.stopService(ControlService.class);
     }
 }

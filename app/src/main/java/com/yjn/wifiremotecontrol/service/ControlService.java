@@ -12,6 +12,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.BusUtils;
+import com.blankj.utilcode.util.NetworkUtils;
 import com.yjn.wifiremotecontrol.MyApplication;
 import com.yjn.wifiremotecontrol.R;
 import com.yjn.wifiremotecontrol.event.EventTAGConstants;
@@ -23,11 +24,6 @@ import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
 
 /**
  * <pre>
@@ -50,6 +46,7 @@ public class ControlService extends Service {
     private int fpsBitmap = 5;
     //web端需要的图片格式
     private boolean isWebp = false;
+    private String msg;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -62,7 +59,11 @@ public class ControlService extends Service {
         BusUtils.register(this);
         Log.i(TAG, "onCreate: 远程控制后台服务");
 
-        startForeground();
+        msg = NetworkUtils.isConnected() ?
+                "ip:" + NetworkUtils.getIPAddress(true) + "\t\tport:" + SocketIoManager.PORT
+                :
+                "当前没有网络！";
+        startForeground(msg);
 
         //开启服务端start socket server
         new Thread(() -> SocketIoManager.getInstance().startSocketIo()).start();
@@ -71,6 +72,8 @@ public class ControlService extends Service {
     @Override
     public void onDestroy() {
         BusUtils.unregister(this);
+        msg = "";
+        stopForeground(true);
         SocketIoManager.getInstance().releaseServer();
         super.onDestroy();
     }
@@ -78,7 +81,12 @@ public class ControlService extends Service {
     /**
      * 设置前端状态
      */
-    private void startForeground() {
+    private void startForeground(String msg) {
+        //Log.i(TAG, "startForeground: msg = " + this.msg+"   "+msg);
+        this.msg = msg;
+        //先取消之前的通知
+        stopForeground(true);
+
         Notification.Builder builder = new Notification.Builder(this);
         PendingIntent contentIndent = null;
         builder.setContentIntent(contentIndent)
@@ -87,28 +95,11 @@ public class ControlService extends Service {
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.view_logo))
                 .setAutoCancel(false)
                 .setContentTitle(getString(R.string.app_name))
-                .setContentText("ip:" + getIP() + "\t\tport:" + SocketIoManager.PORT);
+                .setContentText(msg);
         Notification notification = builder.build();
         notification.flags = Notification.FLAG_FOREGROUND_SERVICE;
 
         startForeground(SERVICE_ID, notification);
-    }
-
-    private String getIP() {
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    if (!inetAddress.isLoopbackAddress() && (inetAddress instanceof Inet4Address)) {
-                        return inetAddress.getHostAddress().toString();
-                    }
-                }
-            }
-        } catch (SocketException ex) {
-            ex.printStackTrace();
-        }
-        return null;
     }
 
     /**
@@ -127,6 +118,14 @@ public class ControlService extends Service {
             //toast("关闭上传服务");
             //关闭远程控制,给个加状态
             SocketIoManager.getInstance().releaseClient();
+        }
+    }
+
+    @BusUtils.Bus(tag = EventTAGConstants.NOTIFICATION_MSG)
+    public void notificationMsg(String msg) {
+        //内容一致，不需要更新
+        if (!this.msg.equals(msg)) {
+            startForeground(msg);
         }
     }
 

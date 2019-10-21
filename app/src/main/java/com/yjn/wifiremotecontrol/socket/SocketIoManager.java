@@ -83,7 +83,8 @@ public class SocketIoManager {
     public void releaseClient() {
         mSocketReady = false;
         try {
-            mSocket.close();
+            if (mSocket != null)
+                mSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -93,7 +94,8 @@ public class SocketIoManager {
         releaseClient();
 
         try {
-            serverSocket.close();
+            if (serverSocket != null)
+                serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

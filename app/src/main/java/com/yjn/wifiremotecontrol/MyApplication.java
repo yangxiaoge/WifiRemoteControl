@@ -6,10 +6,15 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
+import com.blankj.utilcode.util.NetworkUtils;
+import com.blankj.utilcode.util.ServiceUtils;
 import com.yjn.wifiremotecontrol.service.BatteryBroadcastReceiver;
+import com.yjn.wifiremotecontrol.service.ControlService;
 import com.yjn.wifiremotecontrol.service.ScreenReceiver;
 import com.yjn.wifiremotecontrol.service.UpgradeReceiver;
+import com.yjn.wifiremotecontrol.util.ServiceHelper;
 
 /**
  * <pre>
@@ -42,6 +47,20 @@ public class MyApplication extends Application {
         IntentFilter filter1 = new IntentFilter();
         filter1.addAction(Intent.ACTION_POWER_CONNECTED);
         filter1.addAction(Intent.ACTION_POWER_DISCONNECTED);
-        registerReceiver(new BatteryBroadcastReceiver(), filter);
+        registerReceiver(new BatteryBroadcastReceiver(), filter1);
+
+        NetworkUtils.registerNetworkStatusChangedListener(new NetworkUtils.OnNetworkStatusChangedListener() {
+            @Override
+            public void onDisconnected() {
+                Log.i("MyApplication", "onDisconnected: 网络断开");
+                ServiceHelper.dealService();
+            }
+
+            @Override
+            public void onConnected(NetworkUtils.NetworkType networkType) {
+                Log.i("MyApplication", "onDisconnected: 网络连接");
+                ServiceHelper.dealService();
+            }
+        });
     }
 }

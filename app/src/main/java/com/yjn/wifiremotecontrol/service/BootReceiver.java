@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.blankj.utilcode.util.ServiceUtils;
 import com.yjn.wifiremotecontrol.socket.SocketIoManager;
+import com.yjn.wifiremotecontrol.util.ServiceHelper;
 
 /**
  * <pre>
@@ -22,15 +23,6 @@ public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
         Log.i(TAG, "onReceive: " + intent.getAction());
-        if (ServiceUtils.isServiceRunning(ControlService.class)) {
-            //网络变化等等
-            if (SocketIoManager.getInstance().serverSocket == null ||
-                    SocketIoManager.getInstance().serverSocket.isClosed()) {
-                //开启服务
-                SocketIoManager.getInstance().startSocketIo();
-            }
-        } else {
-            ServiceUtils.startService(ControlService.class);
-        }
+        ServiceHelper.dealService();
     }
 }
