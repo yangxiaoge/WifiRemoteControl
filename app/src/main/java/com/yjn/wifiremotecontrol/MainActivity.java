@@ -1,7 +1,6 @@
 package com.yjn.wifiremotecontrol;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,12 +11,6 @@ import com.blankj.utilcode.util.ServiceUtils;
 import com.yjn.wifiremotecontrol.service.ControlService;
 import com.yjn.wifiremotecontrol.socket.SocketIoManager;
 
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
-
 public class MainActivity extends AppCompatActivity {
     private TextView msg;
 
@@ -25,6 +18,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(getString(R.string.app_name) + " v" + BuildConfig.VERSION_NAME);
+        }
         msg = findViewById(R.id.ip);
         ServiceUtils.startService(ControlService.class);
     }
@@ -48,6 +44,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void stop(View view) {
-       ServiceUtils.stopService(ControlService.class);
+        ServiceUtils.stopService(ControlService.class);
     }
 }
