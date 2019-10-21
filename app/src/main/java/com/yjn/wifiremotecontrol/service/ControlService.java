@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.blankj.utilcode.util.BusUtils;
 import com.blankj.utilcode.util.NetworkUtils;
+import com.yjn.wifiremotecontrol.MainActivity;
 import com.yjn.wifiremotecontrol.MyApplication;
 import com.yjn.wifiremotecontrol.R;
 import com.yjn.wifiremotecontrol.event.EventTAGConstants;
@@ -88,7 +89,8 @@ public class ControlService extends Service {
         stopForeground(true);
 
         Notification.Builder builder = new Notification.Builder(this);
-        PendingIntent contentIndent = null;
+        PendingIntent contentIndent = PendingIntent.getActivity(this, 0,
+                new Intent(this, MainActivity.class), 0);
         builder.setContentIntent(contentIndent)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.mipmap.view_logo)
