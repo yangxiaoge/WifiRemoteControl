@@ -22,10 +22,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        TextView msg = findViewById(R.id.ip);
-        msg.append("本机ip " + getIP() + "\n\n端口 " + SocketIoManager.PORT);
 
         ServiceUtils.startService(ControlService.class);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        TextView msg = findViewById(R.id.ip);
+        msg.append("本机ip " + getIP() + "\n\n端口 " + SocketIoManager.PORT);
     }
 
     private String getIP() {

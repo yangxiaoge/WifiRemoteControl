@@ -8,6 +8,14 @@ import android.util.Log;
 import com.blankj.utilcode.util.ServiceUtils;
 import com.yjn.wifiremotecontrol.socket.SocketIoManager;
 
+/**
+ * <pre>
+ *     author: Bruce_Yang
+ *     blog  : https://yangjianan.gitee.io
+ *     time  : 2019/10/21
+ *     desc  : 开机等广播
+ * </pre>
+ */
 public class BootReceiver extends BroadcastReceiver {
     public static final String TAG = BootReceiver.class.getSimpleName();
 

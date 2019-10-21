@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.yjn.wifiremotecontrol.service.BatteryBroadcastReceiver;
 import com.yjn.wifiremotecontrol.service.ScreenReceiver;
 import com.yjn.wifiremotecontrol.service.UpgradeReceiver;
 
@@ -38,5 +39,9 @@ public class MyApplication extends Application {
         filter.addAction(Intent.ACTION_SCREEN_ON);
         registerReceiver(new ScreenReceiver(), filter);
 
+        IntentFilter filter1 = new IntentFilter();
+        filter1.addAction(Intent.ACTION_POWER_CONNECTED);
+        filter1.addAction(Intent.ACTION_POWER_DISCONNECTED);
+        registerReceiver(new BatteryBroadcastReceiver(), filter);
     }
 }

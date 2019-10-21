@@ -71,7 +71,7 @@ public class Client extends JFrame {
         panelContainer2.add(panelContainer, BorderLayout.NORTH);
 
         label = new JLabel();
-        label.setIcon(new ImageIcon("client_gui/nosignal.jpg"));
+        label.setIcon(new ImageIcon("client_gui_java/nosignal.jpg"));
         label.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.red));
 
         add(panelContainer2, BorderLayout.NORTH);

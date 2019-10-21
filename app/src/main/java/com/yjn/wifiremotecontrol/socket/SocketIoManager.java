@@ -49,7 +49,7 @@ public class SocketIoManager {
      * 开启服务server
      * 客户端连接上之后立刻上传图片
      */
-    public void startSocketIo() {
+    public synchronized void startSocketIo() {
         try {
             Log.i(TAG, "init: >>>>>start>>>>>");
             serverSocket = new ServerSocket(PORT);

@@ -1,19 +1,14 @@
 package com.yjn.wifiremotecontrol.service;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
-
-import androidx.core.app.NotificationCompat;
 
 import com.blankj.utilcode.util.BusUtils;
 import com.yjn.wifiremotecontrol.MyApplication;
@@ -34,8 +29,13 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 /**
- * 远程控制后台服务
- * 开启手机坐标，方便开发调试：adb shell settings put system pointer_location 1
+ * <pre>
+ *     author: Bruce_Yang
+ *     blog  : https://yangjianan.gitee.io
+ *     time  : 2019/10/21
+ *     desc  : 远程控制后台服务
+ *     开启手机坐标，方便开发调试：adb shell settings put system pointer_location 1
+ * </pre>
  */
 public class ControlService extends Service {
     public static final String TAG = ControlService.class.getSimpleName();
@@ -45,28 +45,10 @@ public class ControlService extends Service {
     public static float scale = 1f;
     //图片质量压缩
     private int quality = 20;
-    //宽度最高480
-    private int targetWidthSize = 480;
     //每秒几帧图片
     private int fpsBitmap = 5;
     //web端需要的图片格式
     private boolean isWebp = false;
-
-    //down#x#y move#x#y up#x#y click#x#y  back home recent power volumeincrease volumedecrease
-    private static final String DOWN = "down";
-    private static final String MOVE = "move";
-    private static final String UP = "up";
-    private static final String CLICK = "click";
-
-    private static final String MENU = "menu";
-    private static final String HOME = "home";
-    private static final String BACK = "back";
-    private static final String RECENT = "recent";
-    private static final String POWER = "power";
-    private static final String VOLUMEINCREASE = "volumeincrease";
-    private static final String VOLUMEDECREASE = "volumedecrease";
-
-    private static final String DEGREE = "DEGREE";
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -98,7 +80,7 @@ public class ControlService extends Service {
     private void startForeground() {
         Notification.Builder builder = new Notification.Builder(this);
         PendingIntent contentIndent = null;
-        builder.setContentIntent(contentIndent).setSmallIcon(R.mipmap.ic_launcher_round)
+        builder.setContentIntent(contentIndent).setSmallIcon(R.mipmap.view_logo)
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(false)
                 .setContentTitle(getString(R.string.app_name))
