@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.FloatingActionButton xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/tools"
+    android:id="@+id/fab"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/ic_menu"
+    app:elevation="6dp"
+    app:pressedTranslationZ="12dp"
+    fab:menu_colorNormal="@color/fab_colorNormal"
+    fab:menu_colorPressed="@color/fab_colorPressed"
+    fab:menu_colorRipple="@color/fab_colorRipple" />

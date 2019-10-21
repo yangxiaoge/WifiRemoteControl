@@ -1,0 +1,2 @@
+include ':app', ':client_gui_java', ':client_gui_android'
+rootProject.name='WifiRemoteControl'
