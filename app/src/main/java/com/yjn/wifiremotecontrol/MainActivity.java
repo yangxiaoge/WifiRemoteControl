@@ -17,20 +17,20 @@ import java.net.SocketException;
 import java.util.Enumeration;
 
 public class MainActivity extends AppCompatActivity {
+    private TextView msg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        msg = findViewById(R.id.ip);
         ServiceUtils.startService(ControlService.class);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        TextView msg = findViewById(R.id.ip);
-        msg.append("本机ip " + getIP() + "\n\n端口 " + SocketIoManager.PORT);
+        msg.setText("本机ip " + getIP() + "\n\n端口 " + SocketIoManager.PORT);
     }
 
     private String getIP() {
