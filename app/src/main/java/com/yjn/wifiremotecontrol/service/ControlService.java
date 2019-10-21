@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.text.TextUtils;
 import android.util.Log;
@@ -80,11 +81,13 @@ public class ControlService extends Service {
     private void startForeground() {
         Notification.Builder builder = new Notification.Builder(this);
         PendingIntent contentIndent = null;
-        builder.setContentIntent(contentIndent).setSmallIcon(R.mipmap.view_logo)
+        builder.setContentIntent(contentIndent)
                 .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.mipmap.view_logo)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.view_logo))
                 .setAutoCancel(false)
                 .setContentTitle(getString(R.string.app_name))
-                .setContentText("ip:" + getIP() + " port:" + SocketIoManager.PORT);
+                .setContentText("ip:" + getIP() + "\t\tport:" + SocketIoManager.PORT);
         Notification notification = builder.build();
         notification.flags = Notification.FLAG_FOREGROUND_SERVICE;
 
@@ -117,11 +120,11 @@ public class ControlService extends Service {
     public void serviceStatus(ControlCommand command) {
         Log.i(TAG, "serviceStatus: status = " + command.status + " isWebp = " + command.isWebp);
         if (command.status) {
-            toast("开启上传服务");
+            //toast("开启上传服务");
             //开启远程空控制，上传截屏
             uploadScreenBySocket();
         } else {
-            toast("关闭上传服务");
+            //toast("关闭上传服务");
             //关闭远程控制,给个加状态
             SocketIoManager.getInstance().releaseClient();
         }
@@ -143,7 +146,7 @@ public class ControlService extends Service {
         ThreadPoolUtils.execute(() -> {
             try {
                 Log.i(TAG, "run: 开始远程控制start");
-                toast("开始远程控制开始");
+                toast("开始远程控制");
                 //远程控制已开启
                 while (SocketIoManager.getInstance().mSocketReady) {
                     ThreadPoolUtils.execute(() -> {
@@ -160,6 +163,7 @@ public class ControlService extends Service {
                 toast("远程控制结束");
             } catch (Exception e) {
                 e.printStackTrace();
+                toast("远程控制结束");
                 Log.e(TAG, "run: 异常啦 ", e);
             }
         });

@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        msg.setText("本机ip " + getIP() + "\n\n端口 " + SocketIoManager.PORT);
+        msg.setText("本机ip " + getIP() + "\t\t端口 " + SocketIoManager.PORT);
     }
 
     private String getIP() {

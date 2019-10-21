@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -13,13 +12,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.lxj.xpopup.XPopup;
 import com.lzf.easyfloat.EasyFloat;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imageView;
     private LinearLayout configLine;
     private float scale = 1f;
+    private Socket socket;
     private BufferedWriter writer;
     private boolean isMove = false;
     private int screenWidth;
@@ -133,12 +135,19 @@ public class MainActivity extends AppCompatActivity {
                 .hasShadowBg(false)
                 .isRequestFocus(false)
                 .atView(view)
-                .asAttachList(new String[]{"重连", "back", "home", "menu", "recent", "power"},
+                .asAttachList(new String[]{"连接", "断开", "back", "home", "menu", "recent", "power"},
                         new int[]{},
                         (position, text) -> {
                             switch (text) {
-                                case "重连":
+                                case "连接":
                                     startControl(null);
+                                    break;
+                                case "断开":
+                                    try {
+                                        socket.close();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
                                     break;
                                 case "back":
                                     hardKey("back");
@@ -165,6 +174,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 //        fullScreen();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -202,16 +221,19 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 super.run();
                 try {
-//                    Socket socket = new Socket(ip, Integer.parseInt(port));
-                    Socket socket = new Socket();
+                    socket = new Socket();
                     socket.connect(new InetSocketAddress(ip, Integer.parseInt(port)), 3000);
                     BufferedInputStream inputStream = new BufferedInputStream(socket.getInputStream());
                     writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
                     Log.i(TAG, "run: 啊啊啊");
-                    runOnUiThread(() -> configLine.setVisibility(View.GONE));
+                    runOnUiThread(() -> toast("连接成功"));
+                    runOnUiThread(() -> {
+                        configLine.setVisibility(View.GONE);
+                        imageView.setVisibility(View.VISIBLE);
+                        toast("连接成功");
+                    });
                     byte[] bytes = null;
                     while (true) {
-                        long s1 = System.currentTimeMillis();
                         int version = inputStream.read();
                         if (version == -1) {
                             return;
@@ -227,22 +249,20 @@ public class MainActivity extends AppCompatActivity {
                         while ((read < length)) {
                             read += inputStream.read(bytes, read, length - read);
                         }
-                        InputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-                        long s2 = System.currentTimeMillis();
-                        //Image image = ImageIO.read(byteArrayInputStream);
-                        //System.out.println(((BufferedImage) image).getWidth()+" "+((BufferedImage) image).getHeight());
-                        //label.setIcon(new ScaleIcon(new ImageIcon(image)));
+
                         Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                         runOnUiThread(() -> imageView.setImageBitmap(
                                 Bitmap.createScaledBitmap(bmp, (int) (screenWidth * scale),
                                         (int) (screenHeight * scale), false)));
-                        long s3 = System.currentTimeMillis();
-
                     }
-
                 } catch (IOException e) {
                     e.printStackTrace();
-                    runOnUiThread(() -> configLine.setVisibility(View.VISIBLE));
+                } finally {
+                    runOnUiThread(() -> {
+                        configLine.setVisibility(View.VISIBLE);
+                        imageView.setVisibility(View.GONE);
+                        toast("连接断开");
+                    });
                 }
             }
         }.start();
@@ -259,7 +279,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void hardKey(String key) {
-
         new Thread(() -> {
             try {
                 if (writer == null) return;
@@ -270,5 +289,11 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    private void toast(String msg) {
+        Toast toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.show();
     }
 }
