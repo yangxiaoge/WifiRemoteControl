@@ -44,7 +44,7 @@ public class ControlService extends Service {
     //图片质量压缩
     private int quality = 20;
     //每秒几帧图片
-    private int fpsBitmap = 5;
+    private int fpsBitmap = 10;
     //web端需要的图片格式
     private boolean isWebp = false;
     private String msg;
