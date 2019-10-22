@@ -15,9 +15,21 @@ android {
 
     }
 
+    //签名配置
+    signingConfigs {
+        release {
+            storeFile file("D://workspace//Android//seuic//签名文件//seuicapp.keystore") //release证书
+            storePassword "seuic1"                            //签名证书密码
+            keyAlias "seuicapp"                                 //别名
+            keyPassword "seuic1"                              //别名密码
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
+            debuggable true
+            signingConfig signingConfigs.release //使用release证书签名
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

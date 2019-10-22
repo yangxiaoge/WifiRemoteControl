@@ -6,9 +6,9 @@
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical">
 
         <Button
@@ -18,9 +18,9 @@
             android:text="开启控制服务" />
 
         <Button
-            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:onClick="stop"
             android:text="关闭控制服务" />
 
@@ -28,6 +28,20 @@
             android:id="@+id/ip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"
+            android:text="控制端apk下载↓"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:text="https://dwz.cn/xyGuOpaq" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

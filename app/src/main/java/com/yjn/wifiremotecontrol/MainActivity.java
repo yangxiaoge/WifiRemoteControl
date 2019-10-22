@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.ServiceUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.yjn.wifiremotecontrol.service.ControlService;
 import com.yjn.wifiremotecontrol.socket.SocketIoManager;
 
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(getString(R.string.app_name) + " v" + BuildConfig.VERSION_NAME);
+            getSupportActionBar().setTitle(getString(R.string.app_name) + "for局域网  v" + BuildConfig.VERSION_NAME);
         }
         msg = findViewById(R.id.ip);
         ServiceUtils.startService(ControlService.class);
@@ -37,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
                     SocketIoManager.getInstance().serverSocket.isClosed()) {
                 //开启服务
                 SocketIoManager.getInstance().startSocketIo();
+            }else {
+                ToastUtils.showShort("无需重复开启服务");
             }
         } else {
             ServiceUtils.startService(ControlService.class);
