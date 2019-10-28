@@ -15,3 +15,6 @@
 
 [受控端](apk/受控端.apk)
 [控制端](apk/控制端-android.apk)
+
+#### 鸣谢
+> https://github.com/android-notes/androidScreenShare
