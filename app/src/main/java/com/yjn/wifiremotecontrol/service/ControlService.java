@@ -20,6 +20,7 @@ import com.yjn.wifiremotecontrol.event.EventTAGConstants;
 import com.yjn.wifiremotecontrol.socket.SocketIoManager;
 import com.yjn.wifiremotecontrol.util.ScreenUtils;
 import com.yjn.wifiremotecontrol.util.ThreadPoolUtils;
+import com.yjn.wifiremotecontrol.util.TouchUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -140,6 +141,9 @@ public class ControlService extends Service {
         });
     }
 
+    //远程控制前，手机锁屏状态，用于远程结束还原状态
+    private boolean screenIsLock;
+
     /**
      * 上传截屏
      */
@@ -148,6 +152,13 @@ public class ControlService extends Service {
             try {
                 Log.i(TAG, "run: 开始远程控制start");
                 toast("开始远程控制");
+
+                screenIsLock = com.blankj.utilcode.util.ScreenUtils.isScreenLock();
+                //远程控制时，锁屏的设备先亮屏
+                if (screenIsLock) {
+                    TouchUtils.power();
+                }
+
                 //远程控制已开启
                 while (SocketIoManager.getInstance().mSocketReady) {
                     ThreadPoolUtils.execute(() -> {
@@ -162,6 +173,11 @@ public class ControlService extends Service {
                 }
                 Log.i(TAG, "run: 此次远程控制结束end");
                 toast("远程控制结束");
+
+                //远程控制结束，如果控制之前是锁屏的，那么继续将设备锁屏
+                if (!com.blankj.utilcode.util.ScreenUtils.isScreenLock() && screenIsLock) {
+                    TouchUtils.power();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 toast("远程控制结束");
