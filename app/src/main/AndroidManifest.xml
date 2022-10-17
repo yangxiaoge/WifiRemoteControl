@@ -6,7 +6,7 @@
     <!-- android:sharedUserId="android.uid.system"   -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!--android 8.0 以上使用 StartForeground 开启通知-->
-    <!--    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />-->
+        <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <application
         android:name=".MyApplication"
         android:allowBackup="true"

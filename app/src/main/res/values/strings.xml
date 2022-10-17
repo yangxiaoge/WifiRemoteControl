@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">远程受控端</string>
+    <string name="mdm_service_launched">远程受控端</string>
 </resources>

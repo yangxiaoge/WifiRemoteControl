@@ -19,7 +19,7 @@
             android:id="@+id/ip_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="192.168.1.112" />
+            android:text="192.168.41.123" />
 
         <EditText
             android:id="@+id/port_et"

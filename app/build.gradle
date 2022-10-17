@@ -15,14 +15,20 @@ android {
     //签名配置
     signingConfigs {
         release {
-            storeFile file("D://workspace//Android//seuic//签名文件//seuicapp.keystore") //release证书
-            storePassword "seuic1"                            //签名证书密码
-            keyAlias "seuicapp"                                 //别名
-            keyPassword "seuic1"                              //别名密码
+            def KEYSTORE_FILE = System.getenv("KEY_STORE_SEUIC") ?: KEY_PATH
+            println("KEYSTORE_FILE===>" + KEYSTORE_FILE)
+            storeFile file(KEYSTORE_FILE)
+            storePassword STORE_PASSWORD
+            keyAlias = ALIAS_NAME
+            keyPassword KEY_PASSWORD
         }
     }
 
     buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
             debuggable true

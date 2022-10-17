@@ -18,6 +18,7 @@ import com.yjn.wifiremotecontrol.MyApplication;
 import com.yjn.wifiremotecontrol.R;
 import com.yjn.wifiremotecontrol.event.EventTAGConstants;
 import com.yjn.wifiremotecontrol.socket.SocketIoManager;
+import com.yjn.wifiremotecontrol.util.ForegroundNotificationUtils;
 import com.yjn.wifiremotecontrol.util.ScreenUtils;
 import com.yjn.wifiremotecontrol.util.ThreadPoolUtils;
 import com.yjn.wifiremotecontrol.util.TouchUtils;
@@ -86,23 +87,8 @@ public class ControlService extends Service {
     private void startForeground(String msg) {
         //Log.i(TAG, "startForeground: msg = " + this.msg+"   "+msg);
         this.msg = msg;
-        //先取消之前的通知
-        stopForeground(true);
+        ForegroundNotificationUtils.startForegroundNotification(this, msg);
 
-        Notification.Builder builder = new Notification.Builder(this);
-        PendingIntent contentIndent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
-        builder.setContentIntent(contentIndent)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.mipmap.view_logo)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.view_logo))
-                .setAutoCancel(false)
-                .setContentTitle(getString(R.string.app_name))
-                .setContentText(msg);
-        Notification notification = builder.build();
-        notification.flags = Notification.FLAG_FOREGROUND_SERVICE;
-
-        startForeground(SERVICE_ID, notification);
     }
 
     /**
